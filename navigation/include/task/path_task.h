@@ -13,7 +13,7 @@ namespace Nav
 		virtual ~PathTask();
 
 		bool initial() override;
-		bool update() override;
+		Result update() override;
 		bool exit() override;
 
 	private:
