@@ -222,6 +222,7 @@ add_executable(navigation src/main.cpp
                                                           src/logger/logger.cpp
                                                           src/context/context.cpp
                                                           src/mission/mission.cpp
+                                                          src/message/message.cpp
                                                           src/task/task.cpp
                                                           src/task/path_task.cpp)
 target_link_libraries(navigation ${catkin_LIBRARIES})
