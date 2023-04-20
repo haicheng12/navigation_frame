@@ -14,11 +14,11 @@
 3、添加arbotix仿真插件
 ```
 
-###整体思路
+**整体思路**
 
 打算写一个新的导航通用框架，将各个功能模块连接起来
 
-###目录结构
+**目录结构**
 
 ```
 .
@@ -26,16 +26,16 @@
 ├── atom 小车模型
 ├── navigation 导航系统
 │   ├── include
-│   │   ├── context
+│   │   ├── context 连接上下文
 │   │   │   └── context.h
-│   │   ├── logger
+│   │   ├── logger 日志系统
 │   │   │   └── logger.h
-│   │   ├── mission
+│   │   ├── mission 任务收发
 │   │   │   └── mission.h
-│   │   ├── task
+│   │   ├── task 任务
 │   │   │   ├── path_task.h
 │   │   │   └── task.h
-│   │   └── utility_tool
+│   │   └── utility_tool 通用工具
 │   │       └── utility_tool.h
 │   ├── package.xml
 │   ├── src
