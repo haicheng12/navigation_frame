@@ -4,7 +4,7 @@
 #include "planner.h"
 #include <iostream>
 
-enum FollowTrackState : u_int8_t // 跟线状态机
+enum FollowTrackState : u_int8_t // 跟线状态
 {
 	RUN = 1,	 // 正常行驶
 	ARRIVE_GOAL, // 到达终点
