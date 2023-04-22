@@ -40,6 +40,8 @@ namespace Nav
     Result PathTask::update()
     {
         info("循环执行");
+
+        // 当前位置获取
         return Result::SUCCEED;
     }
     bool PathTask::exit()

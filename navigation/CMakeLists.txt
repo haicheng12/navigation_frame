@@ -223,6 +223,7 @@ add_executable(navigation src/main.cpp
                                                           src/context/context.cpp
                                                           src/mission/mission.cpp
                                                           src/message/message.cpp
+                                                          src/chassis/chassis.cpp
                                                           src/planner/planner.cpp
                                                           src/planner/follow_track.cpp
                                                           src/task/task.cpp
