@@ -6,9 +6,11 @@
 
 enum missionState : u_int8_t // 任务状态
 {
-	IDEL = 1,		 // 空闲
-	RECORD_PATH, // 录制线路
-	PUB_PATH		 // 发布线路
+	IDEL = 1,			// 空闲
+	RECORD_PATH,	// 录制线路
+	FOLLOW_TRACK, // 跟线
+	ROTATION,			// 旋转
+	STOP					// 暂停
 };
 
 namespace Nav

@@ -36,18 +36,19 @@ namespace Nav
         }
         catch (serial::IOException &e)
         {
-            erro("Unable to open port.");
-            return -1;
+            warn("Unable to open port.");
+            return false;
         }
 
         // 判断串口是否打开成功
         if (sp_.isOpen())
         {
-            erro("/dev/ttyUSB0 is opened.");
+            info("/dev/ttyUSB0 is opened.");
+            return true;
         }
         else
         {
-            return -1;
+            return false;
         }
         return true;
     }

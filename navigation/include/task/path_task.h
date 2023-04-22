@@ -21,8 +21,9 @@
 
 enum PathTaskState : u_int8_t // 录制线路状态
 {
-	BEING = 1, // 正在录制
-	STOP			 // 停止录制
+	RUNNING = 1, // 正在录制
+	STOP,				 // 停止录制
+	PUB					 // 发布线路
 };
 
 struct Points // 全局路径

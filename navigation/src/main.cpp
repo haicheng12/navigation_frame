@@ -29,8 +29,15 @@ int main(int argc, char **argv)
     ros::Rate loop_rate(1);
     while (ros::ok())
     {
+        // 先写个简单的，打印位置信息
         geometry_msgs::PoseStamped current_pose = context->getMessagePtr()->getCurrentPose();
         info("current_pose is %f %f %f", current_pose.pose.position.x, current_pose.pose.position.y, tf::getYaw(current_pose.pose.orientation));
+
+        // 串口通信
+        if (context->getChassisPtr()->initial())
+        {
+            context->getChassisPtr()->start();
+        }
 
         ros::spinOnce();
         loop_rate.sleep();
