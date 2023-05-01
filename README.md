@@ -83,13 +83,19 @@ $ rosrun navigation record_path_client 1
 $ rosrun teleop_twist_keyboard_cpp teleop_twist_keyboard
 ```
 
-5、发布录制线路程序
-
+5、发布录制线路程序（1-1000代码录制第几条线路，0代表暂停发布）：
+```
+$ rosrun navigation pub_path_client 1
+```
 
 **完善思路**
 
+```
 1、任务收发使用ROS服务的形式
 2、定位信息和传感器信息接收
+3、zmq的形式修改通信架构，例如使用DDS的方式
+4、交叉编译代码到linux板子
+```
 
 
 
