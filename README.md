@@ -16,6 +16,9 @@
 ————2023年4月22日
 1、添加当前位置获取
 2、添加串口通信代码
+
+————2023年5月1日
+1、完善录制线路，发布线路的代码，仿真验证通过
 ```
 
 **整体思路**
@@ -57,6 +60,31 @@
 │       └── path.srv
 └── teleop_twist_keyboard_cpp 键盘控制程序
 ```
+
+**启动步骤**
+
+1、启动仿真：
+```
+$ roslaunch atom sim_navigation.launch
+```
+
+2、启动导航程序：
+```
+$ roslaunch navigation navigation.launch 
+```
+
+3、启动录制线路程序（1-1000代码录制第几条线路，0代表暂停录制）：
+```
+$ rosrun navigation record_path_client 1
+```
+
+4、启动键盘控制：
+```
+$ rosrun teleop_twist_keyboard_cpp teleop_twist_keyboard
+```
+
+5、发布录制线路程序
+
 
 **完善思路**
 

@@ -231,6 +231,12 @@ add_executable(navigation src/main.cpp
 target_link_libraries(navigation ${catkin_LIBRARIES})
 add_dependencies(navigation navigation_gencpp)
 
+add_executable(record_path_client src/record_path_client.cpp)
+target_link_libraries(record_path_client ${catkin_LIBRARIES})
+
+add_executable(pub_path_client src/pub_path_client.cpp)
+target_link_libraries(pub_path_client ${catkin_LIBRARIES})
+
 #install(DIRECTORY include/${PROJECT_NAME}/
 #  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
 #  FILES_MATCHING PATTERN "*.h"

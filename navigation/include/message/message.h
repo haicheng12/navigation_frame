@@ -36,10 +36,10 @@ namespace Nav
 	private:
 		ros::NodeHandle nh_;
 
-		ros::Subscriber odom_sub_;				 // 接收里程计
+		ros::Subscriber odom_sub_;		   // 接收里程计
 		ros::Subscriber current_pose_sub_; // 接收当前位置
 
-		void odomCallback(const nav_msgs::OdometryConstPtr &msg);								 // 里程计
+		void odomCallback(const nav_msgs::OdometryConstPtr &msg);				 // 里程计
 		void currentPoseCallback(const geometry_msgs::PoseStampedConstPtr &msg); // 回调当前位置
 
 		geometry_msgs::PoseStamped current_pose_;

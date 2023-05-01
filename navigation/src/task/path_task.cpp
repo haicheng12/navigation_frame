@@ -6,7 +6,10 @@ namespace Nav
 {
     PathTask::PathTask() // 构造函数
     {
-        info("构造函数");
+        // info("构造函数");
+
+        nh_.getParam("is_use_sim", is_use_sim_);
+        nh_.getParam("interval", interval_);
 
         record_path_service_ = nh_.advertiseService("record_path_num", &PathTask::recordPathServer, this);
         pub_path_service_ = nh_.advertiseService("pub_path_num", &PathTask::pubPathServer, this);
@@ -19,12 +22,12 @@ namespace Nav
     {
         exit();
 
-        info("析构函数");
+        // info("析构函数");
     }
 
     bool PathTask::initial()
     {
-        info("初始化");
+        // info("初始化");
 
         outFile_.clear();
         path_sum_ = 0.0;
@@ -35,19 +38,69 @@ namespace Nav
         global_sum_ = 0;
         global_path_size_ = 0;
 
+        path_task_state_ = PathTaskState::NOTHING;
+
         return true;
     }
-    Result PathTask::update()
-    {
-        info("循环执行");
 
-        // 当前位置获取
-        return Result::SUCCEED;
+    TaskState PathTask::update()
+    {
+        // info("循环执行");
+
+        if (is_record_path_)
+        {
+            if (!receive_once_) // first subscribe 接收第一个数据
+            {
+                // 位置信息以四元数的形式存储起来
+                outFile_ << current_pose_.pose.position.x << "," << current_pose_.pose.position.y << "," << tf::getYaw(current_pose_.pose.orientation) << std::endl;
+
+                receive_once_ = true;
+
+                pre_pose_.pose = current_pose_.pose; // 记录当前位置
+
+                info("pre_pose_ is %f, %f, %f", pre_pose_.pose.position.x, pre_pose_.pose.position.y, tf::getYaw(pre_pose_.pose.orientation));
+
+                return TaskState::PATH;
+            }
+            else
+            {
+                // 计算这个距离数据，勾股定理计算
+                float distance = sqrt(pow((current_pose_.pose.position.x - pre_pose_.pose.position.x), 2) +
+                                      pow((current_pose_.pose.position.y - pre_pose_.pose.position.y), 2));
+                // 如果小车移动了0.5米
+                if (distance >= interval_)
+                {
+                    ++path_index_;
+                    // 写入需要录取的数据
+                    outFile_ << current_pose_.pose.position.x << "," << current_pose_.pose.position.y << "," << tf::getYaw(current_pose_.pose.orientation) << std::endl;
+                    info("正在进行第 %d 个数据写入......", path_index_);
+
+                    pre_pose_.pose = current_pose_.pose; // 更新当前位置
+                    info("pre_pose_ is  %f %f %f", pre_pose_.pose.position.x, pre_pose_.pose.position.y, tf::getYaw(pre_pose_.pose.orientation));
+
+                    return TaskState::PATH;
+                }
+                return TaskState::PATH;
+            }
+        }
+        else
+        {
+            // info("暂停录制线路");
+            return TaskState::IDEL;
+        }
+        return TaskState::IDEL;
     }
+
     bool PathTask::exit()
     {
         info("退出");
+
         return true;
+    }
+
+    void PathTask::setCurrentPose(const geometry_msgs::PoseStamped &msg)
+    {
+        current_pose_ = msg;
     }
 
     bool PathTask::recordPathServer(navigation::path::Request &req,
@@ -66,11 +119,12 @@ namespace Nav
             std::string str4 = str1 + str2 + str3;
             info("%s", str4);
 
-            info("开始录制线路：", current_path_num);
+            info("开始录制线路：%d", current_path_num);
             outFile_.open(str4, std::ios::app);
             if (!outFile_)
             {
                 erro("打开文件失败！");
+
                 return false;
             }
             info("请移动机器人录制线路");
@@ -80,19 +134,29 @@ namespace Nav
             ++path_sum_;
             res.sum = path_sum_;
             info("current_path_num path_sum_ is [%d] [%d]", current_path_num, path_sum_);
+
+            path_task_state_ = PathTaskState::RECORD;
+
             return true;
         }
         else if (current_path_num == 0)
         {
-            info("暂停录制线路");
+            // info("暂停录制线路");
             outFile_.close();
             is_record_path_ = false;
+
+            path_task_state_ = PathTaskState::RECORD_PAUSE;
+
             return true;
         }
         else
         {
             is_path_server_ = false;
+
+            path_task_state_ = PathTaskState::FAILED;
+
             warn("path num is error, please try again !!!");
+
             return false;
         }
         return true;
@@ -115,6 +179,8 @@ namespace Nav
             if (!data)
             {
                 info("打开文件失败！");
+                path_task_state_ = PathTaskState::FAILED;
+
                 return false;
             }
             else
@@ -148,6 +214,7 @@ namespace Nav
                 {
                     info("x  is %f, y is %f, yaw is %f", vec_points_[i].x, vec_points_[i].y, vec_points_[i].yaw);
                 }
+                path_task_state_ = PathTaskState::PUB;
             }
 
             pubPathLine();               // 发布线路点
@@ -156,16 +223,25 @@ namespace Nav
             ++global_sum_;
             res.sum = global_sum_;
             info("global_path_num global_sum_ [%d] [%d]", global_path_num, global_sum_);
+
+            path_task_state_ = PathTaskState::PUB;
+
             return true;
         }
         else if (global_path_num == 0)
         {
             info("暂停发布线路");
+
+            path_task_state_ = PathTaskState::PUB_PAUSE;
+
             return true;
         }
         else
         {
             warn("path num is error, please try again !!!");
+
+            path_task_state_ = PathTaskState::FAILED;
+
             return false;
         }
         return true;

@@ -21,9 +21,12 @@
 
 enum PathTaskState : u_int8_t // 录制线路状态
 {
-	RUNNING = 1, // 正在录制
-	STOP,				 // 停止录制
-	PUB					 // 发布线路
+	NOTHING = 1,  // 空闲
+	RECORD,		  // 正在录制
+	RECORD_PAUSE, // 暂停录制
+	PUB_PAUSE,	  // 暂停发布
+	PUB,		  // 发布线路
+	FAILED		  // 失败
 };
 
 struct Points // 全局路径
@@ -43,8 +46,15 @@ namespace Nav
 		virtual ~PathTask();
 
 		bool initial() override;
-		Result update() override;
+		TaskState update() override;
 		bool exit() override;
+
+		void setCurrentPose(const geometry_msgs::PoseStamped &msg);
+
+		geometry_msgs::PoseStamped current_pose_; // 当前位置
+		geometry_msgs::PoseStamped pre_pose_;	  // 上一次位置
+
+		PathTaskState path_task_state_; // 线路任务状态
 
 	private:
 		ros::NodeHandle nh_;
@@ -56,14 +66,14 @@ namespace Nav
 		ros::Publisher path_num_pub_;
 
 		bool recordPathServer(navigation::path::Request &req,
-													navigation::path::Response &res); // 记录路径
+							  navigation::path::Response &res); // 记录路径
 		bool pubPathServer(navigation::path::Request &req,
-											 navigation::path::Response &res); // 发布路径
+						   navigation::path::Response &res); // 发布路径
 
-		void pubPathLine();					// 发布路径
+		void pubPathLine();			// 发布路径
 		void pubPathNum(int index); // 发布路径标号
 
-		std::ofstream outFile_;					 // 保存文件
+		std::ofstream outFile_;			 // 保存文件
 		std::vector<Points> vec_points_; // 路径点存储
 		bool is_record_path_;
 		bool is_path_server_;
@@ -72,6 +82,10 @@ namespace Nav
 		int path_sum_;
 		int global_path_size_;
 		int global_sum_;
+
+		// 加载的参数
+		bool is_use_sim_;
+		double interval_;
 	};
 }
 
