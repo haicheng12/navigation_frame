@@ -98,7 +98,7 @@ $ rosrun navigation pub_path_client 1
 
 **实车图片**
 
-![Image text](https://github.com/haicheng12/McKnum_car_sim/blob/main/img/carto_img.jpg)
+![Image text](https://github.com/haicheng12/navigation_frame/blob/main/img/car_img.jpg)
 
 **完善思路**
 
