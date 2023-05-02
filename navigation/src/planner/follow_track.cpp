@@ -63,7 +63,7 @@ namespace Nav
             {
             case RUNNING:
             {
-                // info("RUNNING");
+                info("RUNNING");
                 double remaining_dis = sqrt(pow(r_y_.back() - current_pose_.pose.position.y, 2) +
                                             pow(r_x_.back() - current_pose_.pose.position.x, 2));
                 double position_motor = Position_PID(-remaining_dis, 0.0, Position_KP, Position_KI, Position_KD);
@@ -75,18 +75,18 @@ namespace Nav
                     vel_msg.linear.x = velLimit(position_motor, current_vel_x_);
                     vel_msg.angular.z = velLimit(theta, 1.0);
                     cmd_vel_pub_.publish(vel_msg);
-                    // info("cmd_vel [%f] [%f]", vel_msg.linear.x, vel_msg.angular.z);
+                    info("cmd_vel [%f] [%f]", vel_msg.linear.x, vel_msg.angular.z);
 
                     return Result::RUN;
                 }
                 else
                 {
-                    // info("SCAN STOP or WAVE STOP");
+                    info("SCAN STOP or WAVE STOP");
                     geometry_msgs::Twist vel_msg;
                     vel_msg.linear.x = 0.0;
                     vel_msg.angular.z = velLimit(theta, 1.0);
                     cmd_vel_pub_.publish(vel_msg);
-                    // ROS_INFO("cmd_vel [%f] [%f]", vel_msg.linear.x, vel_msg.angular.z);
+                    info("cmd_vel [%f] [%f]", vel_msg.linear.x, vel_msg.angular.z);
 
                     return Result::PAUSE;
                 }
@@ -94,12 +94,12 @@ namespace Nav
             }
             case ARRIVE_GOAL:
             {
-                // info("ARRIVE_GOAL");
+                info("ARRIVE_GOAL");
                 geometry_msgs::Twist vel_msg;
                 vel_msg.linear.x = 0.0;
                 vel_msg.angular.z = 0.0;
                 cmd_vel_pub_.publish(vel_msg);
-                // ROS_INFO("cmd_vel [%f] [%f]", vel_msg.linear.x, vel_msg.angular.z);
+                info("cmd_vel [%f] [%f]", vel_msg.linear.x, vel_msg.angular.z);
 
                 return Result::SUCCEED;
 
@@ -108,12 +108,12 @@ namespace Nav
             break;
             case STOP:
             {
-                // info("STOP");
+                info("STOP");
                 geometry_msgs::Twist vel_msg;
                 vel_msg.linear.x = 0.0;
                 vel_msg.angular.z = 0.0;
                 cmd_vel_pub_.publish(vel_msg);
-                // ROS_INFO("cmd_vel [%f] [%f]", vel_msg.linear.x, vel_msg.angular.z);
+                info("cmd_vel [%f] [%f]", vel_msg.linear.x, vel_msg.angular.z);
 
                 return Result::PAUSE;
             }

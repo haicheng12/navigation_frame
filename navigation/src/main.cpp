@@ -138,7 +138,6 @@ int main(int argc, char **argv)
             }
             current_time = ros::Time::now();
         }
-
         ros::spinOnce();
         loop_rate.sleep();
     }
