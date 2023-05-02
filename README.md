@@ -22,6 +22,7 @@
 
 ————2023年5月2日
 1、完善跟线行使，仿真验证通过，状态机还有问题
+2、无法获取launch的参数，未解
 ```
 
 **整体思路**
@@ -94,6 +95,18 @@ $ rosrun teleop_twist_keyboard_cpp teleop_twist_keyboard
 
 ```
 $ rosrun navigation pub_path_client 1
+```
+
+6、暂停小车，发送 true 暂停，发送 false 恢复行使
+
+```
+$ rostopic pub -1 /car_stop  std_msgs/Bool "data: true"
+```
+
+7、设置小车速度，单位是 m/s
+
+```
+$ rostopic pub -1 /set_speed std_msgs/Float64 "data: 0.3"
 ```
 
 **实车图片**

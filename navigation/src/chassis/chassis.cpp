@@ -6,13 +6,13 @@ namespace Nav
 {
     Chassis::Chassis() // 构造函数
     {
-        info("构造函数");
+        // info("构造函数");
         initial(); // 初始化
     }
 
     Chassis::~Chassis() // 析构函数
     {
-        info("析构函数");
+        // info("析构函数");
 
         // 关闭串口
         sp_.close();

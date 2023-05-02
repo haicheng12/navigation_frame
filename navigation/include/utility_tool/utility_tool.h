@@ -39,7 +39,7 @@ namespace Nav
 		return theta;
 	}
 
-	static double Xianfu(double value, double Amplitude) // 限制最大速度幅度
+	static double velLimit(double value, double Amplitude) // 限制最大速度幅度
 	{
 		double temp;
 		if (value > Amplitude)
@@ -66,7 +66,7 @@ namespace Nav
 		static double Bias, Speed, Integral_bias, Last_Bias;
 		Bias = target - Position; // 计算偏差
 		Integral_bias += Bias;	  // 求出偏差的积分
-		Integral_bias = Xianfu(Integral_bias, 0.5);
+		Integral_bias = velLimit(Integral_bias, 0.5);
 		Speed = Position_KP * Bias + Position_KI * Integral_bias + Position_KD * (Bias - Last_Bias); // 位置式PID控制器
 		Last_Bias = Bias;																			 // 保存上一次偏差
 

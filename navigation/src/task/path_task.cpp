@@ -8,7 +8,6 @@ namespace Nav
     {
         // info("构造函数");
 
-        nh_.getParam("is_use_sim", is_use_sim_);
         nh_.getParam("interval", interval_);
 
         record_path_service_ = nh_.advertiseService("record_path_num", &PathTask::recordPathServer, this);
@@ -37,8 +36,6 @@ namespace Nav
         receive_once_ = true;
         global_sum_ = 0;
         global_path_size_ = 0;
-
-        path_task_state_ = PathTaskState::NOTHING;
 
         return true;
     }
@@ -88,7 +85,6 @@ namespace Nav
             // info("暂停录制线路");
             return TaskState::IDEL;
         }
-        return TaskState::IDEL;
     }
 
     bool PathTask::exit()
@@ -117,7 +113,7 @@ namespace Nav
             std::string str2 = std::to_string(current_path_num);
             std::string str3 = ".csv";
             std::string str4 = str1 + str2 + str3;
-            info("%s", str4);
+            info("存储路径为 %s", str4.c_str());
 
             info("开始录制线路：%d", current_path_num);
             outFile_.open(str4, std::ios::app);
@@ -135,8 +131,6 @@ namespace Nav
             res.sum = path_sum_;
             info("current_path_num path_sum_ is [%d] [%d]", current_path_num, path_sum_);
 
-            path_task_state_ = PathTaskState::RECORD;
-
             return true;
         }
         else if (current_path_num == 0)
@@ -145,15 +139,11 @@ namespace Nav
             outFile_.close();
             is_record_path_ = false;
 
-            path_task_state_ = PathTaskState::RECORD_PAUSE;
-
             return true;
         }
         else
         {
             is_path_server_ = false;
-
-            path_task_state_ = PathTaskState::FAILED;
 
             warn("path num is error, please try again !!!");
 
@@ -172,14 +162,13 @@ namespace Nav
             std::string str2 = std::to_string(global_path_num);
             std::string str3 = ".csv";
             std::string str4 = str1 + str2 + str3;
-            info("%s ", str4);
+            info("发布路径为 %s ", str4.c_str());
 
             // 读取保存的路径点
             std::ifstream data(str4);
             if (!data)
             {
                 info("打开文件失败！");
-                path_task_state_ = PathTaskState::FAILED;
 
                 return false;
             }
@@ -214,7 +203,6 @@ namespace Nav
                 {
                     info("x  is %f, y is %f, yaw is %f", vec_points_[i].x, vec_points_[i].y, vec_points_[i].yaw);
                 }
-                path_task_state_ = PathTaskState::PUB;
             }
 
             pubPathLine();               // 发布线路点
@@ -224,23 +212,17 @@ namespace Nav
             res.sum = global_sum_;
             info("global_path_num global_sum_ [%d] [%d]", global_path_num, global_sum_);
 
-            path_task_state_ = PathTaskState::PUB;
-
             return true;
         }
         else if (global_path_num == 0)
         {
             info("暂停发布线路");
 
-            path_task_state_ = PathTaskState::PUB_PAUSE;
-
             return true;
         }
         else
         {
             warn("path num is error, please try again !!!");
-
-            path_task_state_ = PathTaskState::FAILED;
 
             return false;
         }

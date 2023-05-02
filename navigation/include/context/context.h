@@ -11,6 +11,7 @@
 #include "planner/rotation.h"
 #include "message/message.h"
 #include "chassis/chassis.h"
+#include "mission/mission.h"
 
 using namespace Sakura::Logger;
 
@@ -30,6 +31,7 @@ namespace Nav
 			// chassis_ptr_ = std::make_shared<Chassis>();
 			path_task_ptr_ = std::make_shared<PathTask>();
 			follow_track_ptr_ = std::make_shared<FollowTrack>();
+			mission_ptr_ = std::make_shared<Mission>();
 
 			return true;
 		};
@@ -70,11 +72,21 @@ namespace Nav
 			return follow_track_ptr_;
 		}
 
+		std::shared_ptr<Mission> getMissionPtr() // 获取任务的线程
+		{
+			if (!mission_ptr_)
+			{
+				warn("mission_ptr_ is empty!");
+			}
+			return mission_ptr_;
+		}
+
 	private:
 		std::shared_ptr<PathTask> path_task_ptr_;		// 录制线路任务的线程
 		std::shared_ptr<Message> message_ptr_;			// 获取传感器信息的线程
 		std::shared_ptr<Chassis> chassis_ptr_;			// 串口通信的线程
 		std::shared_ptr<FollowTrack> follow_track_ptr_; // 跟线的线程
+		std::shared_ptr<Mission> mission_ptr_;			// 任务的线程
 
 		std::mutex ptr_mutex_; // 线程锁
 	};

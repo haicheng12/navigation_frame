@@ -4,11 +4,11 @@
 #include "planner.h"
 #include <iostream>
 
-enum RotationState : u_int8_t // 旋转状态
-{
-	RUNNING = 1, // 正常行驶
-	FINISH		 // 到达终点
-};
+// enum RotationState : u_int8_t // 旋转状态
+// {
+// 	RUNNING = 1, // 正常行驶
+// 	FINISH		 // 到达终点
+// };
 
 namespace Nav
 {

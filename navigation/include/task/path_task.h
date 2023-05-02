@@ -19,16 +19,6 @@
 #include <tf/tf.h>
 #include "navigation/path.h"
 
-enum PathTaskState : u_int8_t // 线路任务状态
-{
-	NOTHING = 1,  // 空闲
-	RECORD,		  // 正在录制
-	RECORD_PAUSE, // 暂停录制
-	PUB_PAUSE,	  // 暂停发布
-	PUB,		  // 发布线路
-	FAILED		  // 失败
-};
-
 struct Points // 全局路径
 {
 	double x;
@@ -53,8 +43,6 @@ namespace Nav
 
 		geometry_msgs::PoseStamped current_pose_; // 当前位置
 		geometry_msgs::PoseStamped pre_pose_;	  // 上一次位置
-
-		PathTaskState path_task_state_; // 线路任务状态
 
 	private:
 		ros::NodeHandle nh_;
@@ -84,7 +72,6 @@ namespace Nav
 		int global_sum_;
 
 		// 加载的参数
-		bool is_use_sim_;
 		double interval_;
 	};
 }

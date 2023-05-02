@@ -218,17 +218,18 @@ include_directories("/usr/include/eigen3")
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
 
-add_executable(navigation src/main.cpp 
-  src/logger/logger.cpp
-  src/context/context.cpp
-  src/mission/mission.cpp
-  src/message/message.cpp
+add_executable(navigation 
   src/chassis/chassis.cpp
+  src/context/context.cpp
+  src/logger/logger.cpp
+  src/message/message.cpp
+  src/mission/mission.cpp
   src/planner/planner.cpp
   src/planner/follow_track.cpp
   src/planner/rotation.cpp
   src/task/task.cpp
-  src/task/path_task.cpp)
+  src/task/path_task.cpp
+  src/main.cpp)
 target_link_libraries(navigation ${catkin_LIBRARIES})
 add_dependencies(navigation navigation_gencpp)
 
