@@ -96,6 +96,10 @@ $ rosrun teleop_twist_keyboard_cpp teleop_twist_keyboard
 $ rosrun navigation pub_path_client 1
 ```
 
+**实车图片**
+
+![Image text](https://github.com/haicheng12/McKnum_car_sim/blob/main/img/carto_img.jpg)
+
 **完善思路**
 
 ```
