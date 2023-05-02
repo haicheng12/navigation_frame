@@ -112,6 +112,7 @@ $ rostopic pub -1 /set_speed std_msgs/Float64 "data: 0.3"
 **实车图片**
 
 ![Image text](https://github.com/haicheng12/navigation_frame/blob/main/img/car_img.jpg)
+![Image text](https://github.com/haicheng12/navigation_frame/blob/main/img/car_sim.png)
 
 **完善思路**
 
