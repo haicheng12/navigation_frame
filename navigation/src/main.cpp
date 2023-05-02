@@ -19,15 +19,15 @@ int main(int argc, char **argv)
     else
     {
         fatal("日志系统初始化失败");
-        return 0;
+        return 1;
     }
 
     Nav::Context *context = new Nav::Context(); // //开辟空间
     context->initTaskPtr();                     // 初始化线程指针
 
-    // 录制线路
-    bool is_init_path_task = false;
     TaskState task_state; // 导航任务状态
+    // 线路任务
+    bool is_init_path_task = false;
     if (context->getPathTaskPtr()->initial())
     {
         info("线路任务初始化成功");
@@ -36,7 +36,21 @@ int main(int argc, char **argv)
     else
     {
         fatal("线路任务初始化失败");
-        return 0;
+        return 1;
+    }
+
+    Result planner_state; // 规划器状态
+    // 跟线规划器
+    bool is_init_follow_track = false;
+    if (context->getFollowTrackPtr()->initial())
+    {
+        info("跟线规划器初始化成功");
+        is_init_follow_track = true;
+    }
+    else
+    {
+        fatal("跟线规划器初始化失败");
+        return 1;
     }
 
     ros::Time current_time = ros::Time::now();
@@ -54,10 +68,13 @@ int main(int argc, char **argv)
         //     context->getChassisPtr()->start();
         // }
 
-        if (is_init_path_task)
+        if (is_init_path_task && is_init_follow_track)
         {
             context->getPathTaskPtr()->setCurrentPose(current_pose);
-            task_state = context->getPathTaskPtr()->update(); // 导航任务状态
+            context->getFollowTrackPtr()->setCurrentPose(current_pose);
+
+            task_state = context->getPathTaskPtr()->update();       // 导航任务状态
+            planner_state = context->getFollowTrackPtr()->update(); // 跟线状态
         }
 
         double dt = (ros::Time::now() - current_time).toSec();
@@ -65,27 +82,41 @@ int main(int argc, char **argv)
         if (dt >= 3.0) // 每隔一段时间发布一次
         {
             // info("导航任务状态 task_state is %d", task_state);
-            switch (task_state)
+            // switch (task_state)
+            // {
+            // case 1:
+            //     info("空闲状态");
+            //     break;
+            // case 2:
+            //     info("路线状态");
+            // case 3:
+            //     info("跟线状态");
+            // case 4:
+            //     info("旋转状态");
+            // default:
+            //     break;
+            // }
+            // info("线路任务状态 path_task_state_ is %d", context->getPathTaskPtr()->path_task_state_);
+
+            switch (planner_state)
             {
             case 1:
-                info("空闲状态");
+                info("成功");
                 break;
             case 2:
-                info("路线状态");
+                info("正在进行");
             case 3:
-                info("跟线状态");
+                info("暂停");
             case 4:
-                info("旋转状态");
+                info("失败");
             default:
                 break;
             }
-            // info("线路任务状态 path_task_state_ is %d", context->getPathTaskPtr()->path_task_state_);
 
             current_time = ros::Time::now();
         }
 
         ros::spinOnce();
-
         loop_rate.sleep();
     }
     delete context; ////释放空间

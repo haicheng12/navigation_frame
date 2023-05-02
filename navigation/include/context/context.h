@@ -6,6 +6,9 @@
 #include "logger/logger.h"
 #include "task/task.h"
 #include "task/path_task.h"
+#include "planner/planner.h"
+#include "planner/follow_track.h"
+#include "planner/rotation.h"
 #include "message/message.h"
 #include "chassis/chassis.h"
 
@@ -26,6 +29,7 @@ namespace Nav
 			message_ptr_ = std::make_shared<Message>();
 			// chassis_ptr_ = std::make_shared<Chassis>();
 			path_task_ptr_ = std::make_shared<PathTask>();
+			follow_track_ptr_ = std::make_shared<FollowTrack>();
 
 			return true;
 		};
@@ -57,10 +61,20 @@ namespace Nav
 			return chassis_ptr_;
 		}
 
+		std::shared_ptr<FollowTrack> getFollowTrackPtr() // 获取跟线的线程
+		{
+			if (!follow_track_ptr_)
+			{
+				warn("follow_track_ptr_ is empty!");
+			}
+			return follow_track_ptr_;
+		}
+
 	private:
-		std::shared_ptr<PathTask> path_task_ptr_; // 录制线路任务的线程
-		std::shared_ptr<Message> message_ptr_;	  // 获取传感器信息的线程
-		std::shared_ptr<Chassis> chassis_ptr_;	  // 串口通信的线程
+		std::shared_ptr<PathTask> path_task_ptr_;		// 录制线路任务的线程
+		std::shared_ptr<Message> message_ptr_;			// 获取传感器信息的线程
+		std::shared_ptr<Chassis> chassis_ptr_;			// 串口通信的线程
+		std::shared_ptr<FollowTrack> follow_track_ptr_; // 跟线的线程
 
 		std::mutex ptr_mutex_; // 线程锁
 	};

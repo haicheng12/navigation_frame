@@ -6,7 +6,9 @@
 enum Result : u_int8_t // 任务状态
 {
 	SUCCEED = 1, // 成功
-	FAILED,		 // 失败
+	RUN,		 // 正在进行
+	PAUSE,		 // 暂停
+	FAIL		 // 失败
 };
 
 namespace Nav

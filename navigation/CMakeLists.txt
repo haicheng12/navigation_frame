@@ -219,15 +219,16 @@ include_directories("/usr/include/eigen3")
 # catkin_add_nosetests(test)
 
 add_executable(navigation src/main.cpp 
-                                                          src/logger/logger.cpp
-                                                          src/context/context.cpp
-                                                          src/mission/mission.cpp
-                                                          src/message/message.cpp
-                                                          src/chassis/chassis.cpp
-                                                          src/planner/planner.cpp
-                                                          src/planner/follow_track.cpp
-                                                          src/task/task.cpp
-                                                          src/task/path_task.cpp)
+  src/logger/logger.cpp
+  src/context/context.cpp
+  src/mission/mission.cpp
+  src/message/message.cpp
+  src/chassis/chassis.cpp
+  src/planner/planner.cpp
+  src/planner/follow_track.cpp
+  src/planner/rotation.cpp
+  src/task/task.cpp
+  src/task/path_task.cpp)
 target_link_libraries(navigation ${catkin_LIBRARIES})
 add_dependencies(navigation navigation_gencpp)
 

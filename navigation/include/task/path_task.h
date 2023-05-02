@@ -19,7 +19,7 @@
 #include <tf/tf.h>
 #include "navigation/path.h"
 
-enum PathTaskState : u_int8_t // 录制线路状态
+enum PathTaskState : u_int8_t // 线路任务状态
 {
 	NOTHING = 1,  // 空闲
 	RECORD,		  // 正在录制

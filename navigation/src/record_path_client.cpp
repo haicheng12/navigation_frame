@@ -5,10 +5,10 @@
 
 int main(int argc, char **argv)
 {
-  ros::init(argc, argv, "record_client");
+  ros::init(argc, argv, "record_path_client");
   if (argc != 2)
   {
-    ROS_INFO("usage: record_num X");
+    ROS_INFO("usage: record_path_num X");
     return 1;
   }
 
@@ -19,11 +19,11 @@ int main(int argc, char **argv)
   srv.request.num = atoll(argv[1]);
   if (client.call(srv))
   {
-    ROS_INFO("record sum: %ld", (long int)srv.response.sum);
+    ROS_INFO("record path sum: %ld", (long int)srv.response.sum);
   }
   else
   {
-    ROS_ERROR("Failed to call record_num");
+    ROS_ERROR("Failed to call record_path_client");
     return 1;
   }
 

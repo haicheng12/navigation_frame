@@ -19,6 +19,9 @@
 
 ————2023年5月1日
 1、完善录制线路，发布线路的代码，仿真验证通过
+
+————2023年5月2日
+1、完善跟线行使，仿真验证通过，状态机还有问题
 ```
 
 **整体思路**
@@ -64,26 +67,31 @@
 **启动步骤**
 
 1、启动仿真：
+
 ```
 $ roslaunch atom sim_navigation.launch
 ```
 
 2、启动导航程序：
+
 ```
-$ roslaunch navigation navigation.launch 
+$ roslaunch navigation navigation.launch
 ```
 
-3、启动录制线路程序（1-1000代码录制第几条线路，0代表暂停录制）：
+3、启动录制线路程序（1-1000 代码录制第几条线路，0 代表暂停录制）：
+
 ```
 $ rosrun navigation record_path_client 1
 ```
 
 4、启动键盘控制：
+
 ```
 $ rosrun teleop_twist_keyboard_cpp teleop_twist_keyboard
 ```
 
-5、发布录制线路程序（1-1000代码录制第几条线路，0代表暂停发布）：
+5、发布录制线路程序（1-1000 代码录制第几条线路，0 代表暂停发布）：
+
 ```
 $ rosrun navigation pub_path_client 1
 ```
@@ -96,9 +104,3 @@ $ rosrun navigation pub_path_client 1
 3、zmq的形式修改通信架构，例如使用DDS的方式
 4、交叉编译代码到linux板子
 ```
-
-
-
-
-
-

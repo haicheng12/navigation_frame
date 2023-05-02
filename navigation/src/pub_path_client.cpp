@@ -5,10 +5,10 @@
 
 int main(int argc, char **argv)
 {
-  ros::init(argc, argv, "glabal_client");
+  ros::init(argc, argv, "pub_path_client");
   if (argc != 2)
   {
-    ROS_INFO("usage: glabal_num X");
+    ROS_INFO("usage: pub_path_client X");
     return 1;
   }
 
@@ -19,11 +19,11 @@ int main(int argc, char **argv)
   srv.request.num = atoll(argv[1]);
   if (client.call(srv))
   {
-    ROS_INFO("glabal sum: %ld", (long int)srv.response.sum);
+    ROS_INFO("pub path sum: %ld", (long int)srv.response.sum);
   }
   else
   {
-    ROS_ERROR("Failed to call glabal_num");
+    ROS_ERROR("Failed to call pub_path_client");
     return 1;
   }
 
