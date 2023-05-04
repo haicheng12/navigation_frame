@@ -23,7 +23,15 @@ namespace Nav
 	private:
 		ros::NodeHandle nh_;
 		// 创建一个serial类
-		serial::Serial sp_;
+		serial::Serial ser_;
+
+		// data 为发送数据
+		// result 为接收数据
+		std::string data_, state_, result_;
+		int func_;
+
+		int serialWrite(serial::Serial &ser, std::string &serial_msg);
+		int serialRead(serial::Serial &ser, std::string &result);
 	};
 }
 

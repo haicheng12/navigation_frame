@@ -226,6 +226,7 @@ add_executable(navigation
   src/mission/mission.cpp
   src/planner/planner.cpp
   src/planner/follow_track.cpp
+  src/state/state.cpp
   src/planner/rotation.cpp
   src/task/task.cpp
   src/task/path_task.cpp
@@ -238,6 +239,9 @@ target_link_libraries(record_path_client ${catkin_LIBRARIES})
 
 add_executable(pub_path_client src/pub_path_client.cpp)
 target_link_libraries(pub_path_client ${catkin_LIBRARIES})
+
+add_executable(test_serial src/test_serial.cpp)
+target_link_libraries(test_serial ${catkin_LIBRARIES})
 
 #install(DIRECTORY include/${PROJECT_NAME}/
 #  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}

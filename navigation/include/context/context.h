@@ -12,6 +12,7 @@
 #include "message/message.h"
 #include "chassis/chassis.h"
 #include "mission/mission.h"
+#include "state/state.h"
 
 using namespace Sakura::Logger;
 
@@ -28,7 +29,7 @@ namespace Nav
 			std::lock_guard<std::mutex> lock(ptr_mutex_);
 
 			message_ptr_ = std::make_shared<Message>();
-			// chassis_ptr_ = std::make_shared<Chassis>();
+			chassis_ptr_ = std::make_shared<Chassis>();
 			path_task_ptr_ = std::make_shared<PathTask>();
 			follow_track_ptr_ = std::make_shared<FollowTrack>();
 			mission_ptr_ = std::make_shared<Mission>();

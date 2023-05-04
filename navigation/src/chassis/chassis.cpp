@@ -4,74 +4,78 @@ using namespace Sakura::Logger;
 
 namespace Nav
 {
-    Chassis::Chassis() // 构造函数
+    Chassis::Chassis() : func_(0) // 构造函数
     {
         // info("构造函数");
-        initial(); // 初始化
     }
 
     Chassis::~Chassis() // 析构函数
     {
         // info("析构函数");
-
-        // 关闭串口
-        sp_.close();
+        ser_.close();
     }
 
     bool Chassis::initial() // 初始化
     {
-        // 创建timeout
-        serial::Timeout to = serial::Timeout::simpleTimeout(100);
-        // 设置要打开的串口名称
-        sp_.setPort("/dev/ttyUSB0");
-        // 设置串口通信的波特率
-        sp_.setBaudrate(115200);
-        // 串口设置timeout
-        sp_.setTimeout(to);
-
         try
         {
-            // 打开串口
-            sp_.open();
+            ser_.setPort("/dev/ttyUSB0");
+            ser_.setBaudrate(115200);
+            serial::Timeout to = serial::Timeout::simpleTimeout(1000);
+            ser_.setTimeout(to);
+            ser_.open();
         }
         catch (serial::IOException &e)
         {
-            warn("Unable to open port.");
+            fatal("Unable to open port ");
             return false;
         }
 
-        // 判断串口是否打开成功
-        if (sp_.isOpen())
+        if (ser_.isOpen())
         {
-            info("/dev/ttyUSB0 is opened.");
+            info("Serial Port initialized.\n");
             return true;
         }
         else
         {
             return false;
         }
-        return true;
     }
 
     void Chassis::start()
     {
-        // 获取缓冲区内的字节数
-        size_t n = sp_.available();
-        if (n != 0)
-        {
-            uint8_t buffer[1024];
-            // 读出数据
-            n = sp_.read(buffer, n);
+        // info("键盘输入数字1点亮STM32的LED灯，请输入：");
+        // std::cin >> func_;
+        // switch (func_)
+        // {
+        // case 1:
+        //     data_ = "test \r\n";
+        //     break;
+        // default:
+        //     fatal("输入错误，请重新输入！！！");
+        //     break;
+        // }
 
-            for (int i = 0; i < n; i++)
-            {
-                // 16进制的方式打印到屏幕
-                info("std::hex %02x", (buffer[i] & 0xff));
-            }
-            info("\n");
-            // 把数据发送回去
-            sp_.write(buffer, n);
-        }
+        data_ = "test \r\n";
+
+        //  串口写数据
+        serialWrite(ser_, data_);
+        info("串口写入数据为：%s ", data_.c_str());
+
+        // 串口读数据
+        serialRead(ser_, result_);
+        info("串口读取数据为：%s ", result_.c_str());
     }
 
+    int Chassis::serialWrite(serial::Serial &ser, std::string &serial_msg)
+    {
+        ser_.write(serial_msg);
+        return 0;
+    }
+
+    int Chassis::serialRead(serial::Serial &ser, std::string &result)
+    {
+        result = ser_.read(ser_.available());
+        return 0;
+    }
 }

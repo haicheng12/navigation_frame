@@ -6,7 +6,7 @@ namespace Nav
 {
     Message::Message() // 构造函数
     {
-        info("构造函数");
+        // info("构造函数");
 
         nh_.getParam("is_use_sim", is_use_sim_);
         nh_.getParam("scan_distance_3D", scan_distance_3D_);
@@ -30,7 +30,7 @@ namespace Nav
 
     Message::~Message() // 析构函数
     {
-        info("析构函数");
+        // info("析构函数");
     }
 
     void Message::initial() // 初始化

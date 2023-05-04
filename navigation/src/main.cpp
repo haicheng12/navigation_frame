@@ -22,8 +22,23 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    Nav::Context *context = new Nav::Context(); // //开辟空间
-    context->initTaskPtr();                     // 初始化线程指针
+    Nav::StateMachine *state_machine = new Nav::StateMachine(); // //开辟空间
+    Nav::Context *context = new Nav::Context();                 // //开辟空间
+
+    context->initTaskPtr(); // 初始化线程指针
+
+    bool is_init_chassis = false;
+    // 串口通信
+    if (context->getChassisPtr()->initial())
+    {
+        info("串口通信初始化成功");
+        is_init_chassis = true;
+    }
+    else
+    {
+        fatal("串口通信初始化失败");
+        return 1;
+    }
 
     TaskState task_state; // 导航任务状态
     // 线路任务
@@ -58,6 +73,9 @@ int main(int argc, char **argv)
     ros::Rate loop_rate(10);
     while (ros::ok())
     {
+        // 状态机处理事件序列
+        // state_machine->handleEvent(Event::START_EVENT);
+
         // 先写个简单的，打印位置信息
         geometry_msgs::PoseStamped current_pose = context->getMessagePtr()->getCurrentPose();
         // info("current_pose is %f %f %f", current_pose.pose.position.x, current_pose.pose.position.y, tf::getYaw(current_pose.pose.orientation));
@@ -73,12 +91,6 @@ int main(int argc, char **argv)
                                                                      // info("current_vel_x %f", current_vel_x);
         bool is_stop_car = context->getMissionPtr()->getCarStop();   // 是否停车
                                                                      // info("is_stop_car %d", is_stop_car);
-
-        // // 串口通信
-        // if (context->getChassisPtr()->initial())
-        // {
-        //     context->getChassisPtr()->start();
-        // }
 
         if (is_init_path_task && is_init_follow_track)
         {
@@ -99,49 +111,57 @@ int main(int argc, char **argv)
         // info("dt is %f", dt);
         if (dt >= 1.0) // 每隔一段时间发布一次
         {
-            // info("导航任务状态 task_state is %d", task_state);
-            // switch (task_state)
-            // {
-            // case 1:
-            //     info("空闲状态");
-            //     break;
-            // case 2:
-            //     info("路线状态");
-            //     break;
-            // case 3:
-            //     info("跟线状态");
-            //     break;
-            // case 4:
-            //     info("旋转状态");
-            //     break;
-            // default:
-            //     break;
-            // }
-
-            // info("规划器状态 planner_state is %d", planner_state);
-            switch (planner_state)
+            // 测试串口通信
+            if (is_init_chassis)
             {
-            case 1:
-                info("跟线成功");
-                break;
-            case 2:
-                info("跟线正在进行");
-                break;
-            case 3:
-                info("跟线暂停");
-                break;
-            case 4:
-                info("跟线失败");
-                break;
-            default:
-                break;
+                context->getChassisPtr()->start();
             }
+
+            //     // info("导航任务状态 task_state is %d", task_state);
+            //     // switch (task_state)
+            //     // {
+            //     // case 1:
+            //     //     info("空闲状态");
+            //     //     break;
+            //     // case 2:
+            //     //     info("路线状态");
+            //     //     break;
+            //     // case 3:
+            //     //     info("跟线状态");
+            //     //     break;
+            //     // case 4:
+            //     //     info("旋转状态");
+            //     //     break;
+            //     // default:
+            //     //     break;
+            //     // }
+
+            //     // info("规划器状态 planner_state is %d", planner_state);
+            //     switch (planner_state)
+            //     {
+            //     case 1:
+            //         info("跟线成功");
+            //         break;
+            //     case 2:
+            //         info("跟线正在进行");
+            //         break;
+            //     case 3:
+            //         info("跟线暂停");
+            //         break;
+            //     case 4:
+            //         info("跟线失败");
+            //         break;
+            //     default:
+            //         break;
+            //     }
             current_time = ros::Time::now();
         }
         ros::spinOnce();
         loop_rate.sleep();
     }
-    delete context; ////释放空间
+    delete state_machine; // 释放空间
+    delete context;       // 释放空间
+
     info("导航程序关闭");
 
     return 0;
